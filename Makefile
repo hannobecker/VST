@@ -17,7 +17,7 @@ COMPCERT ?= compcert
 
 #Note2:  By default, the rules for converting .c files to .v files
 # are inactive.  To activate them, do something like
-#CLIGHTGEN=$(COMPCERT)/clightgen 
+#CLIGHTGEN=$(COMPCERT)/clightgen
 
 #Note3: for SSReflect, one solution is to install MathComp 1.6
 # somewhere add this line to a CONFIGURE file
@@ -26,7 +26,7 @@ COMPCERT ?= compcert
 
 CC_TARGET=compcert/cfrontend/Clight.vo
 CC_DIRS= lib common cfrontend exportclight
-VSTDIRS= msl sepcomp veric floyd progs concurrency ccc26x86 
+VSTDIRS= msl sepcomp veric floyd progs concurrency ccc26x86
 OTHERDIRS= wand_demo sha fcf hmacfcf tweetnacl20140427 hmacdrbg aes mailbox
 DIRS = $(VSTDIRS) $(OTHERDIRS)
 CONCUR = concurrency
@@ -236,7 +236,7 @@ CONCPROGS= conclib.v incr.v verif_incr.v cond.v verif_cond.v ghost.v
 
 PROGS_FILES= \
   $(CONCPROGS) \
-  bin_search.v list_dt.v verif_reverse.v verif_queue.v verif_queue2.v verif_sumarray.v \
+  bin_search.v strlib.v list_dt.v verif_reverse.v verif_queue.v verif_queue2.v verif_sumarray.v \
   insertionsort.v reverse.v queue.v sumarray.v message.v string.v object.v \
   revarray.v verif_revarray.v insertionsort.v append.v min.v verif_min.v \
   verif_float.v verif_global.v verif_ptr_compare.v \
@@ -244,9 +244,9 @@ PROGS_FILES= \
   logical_compare.v verif_logical_compare.v field_loadstore.v  verif_field_loadstore.v \
   even.v verif_even.v odd.v verif_odd.v verif_evenodd_spec.v  \
   merge.v verif_merge.v verif_append.v verif_append2.v bst.v bst_oo.v verif_bst.v verif_bst_oo.v \
-  verif_bin_search.v verif_floyd_tests.v \
+  verif_bin_search.v strings.v verif_floyd_tests.v \
   verif_sumarray2.v verif_switch.v verif_message.v verif_object.v \
-  funcptr.v verif_funcptr.v
+  funcptr.v verif_funcptr.v search.v
 # verif_dotprod.v verif_insertion_sort.v
 
 SHA_FILES= \
@@ -403,7 +403,7 @@ ifeq ($(TIMINGS), true)
 else ifeq ($(TIMINGS), simple)
 	@/bin/time -f 'TIMINGS %e real, %U user, %S sys %M kbytes: '"$*.v" $(COQC) $(COQFLAGS) $*.v
 else
-	@$(COQC) $(COQFLAGS) $*.v 
+	@$(COQC) $(COQFLAGS) $*.v
 endif
 
 # you can also write, COQVERSION= 8.6 or-else 8.6pl2 or-else 8.6pl3   (etc.)
@@ -450,7 +450,7 @@ all: .loadpath version.vo $(FILES:.v=.vo)
 # $(patsubst %.v,floyd/%.vo,$(FLOYD_FILES)): compcert
 # msl/Coqlib2.vo: compcert
 # endif
- 
+
 msl:     .loadpath version.vo $(MSL_FILES:%.v=msl/%.vo)
 sepcomp: .loadpath $(CC_TARGET) $(SEPCOMP_FILES:%.v=sepcomp/%.vo)
 ccc26x86:   .loadpath $(CCC26x86_FILES:%.v=ccc26x86/%.vo)
@@ -488,7 +488,7 @@ clean_cvfiles:
 ifdef CLIGHTGEN
 sha/sha.v sha/hmac.v hmacdrbg/hmac_drbg.v sha/hkdf.v: sha/sha.c sha/hmac.c hmacdrbg/hmac_drbg.c sha/hkdf.c
 	$(CLIGHTGEN) ${CGFLAGS} sha/sha.c sha/hmac.c hmacdrbg/hmac_drbg.c sha/hkdf.c
-# Is there a way to generate the next 5 rules automatically from C_FILES? 
+# Is there a way to generate the next 5 rules automatically from C_FILES?
 progs/revarray.v: progs/revarray.c
 	$(CLIGHTGEN) ${CGFLAGS} $<
 progs/reverse.v: progs/reverse.c
@@ -543,7 +543,7 @@ endif
 version.v:  VERSION $(MSL_FILES:%=msl/%) $(SEPCOMP_FILES:%=sepcomp/%) $(VERIC_FILES:%=veric/%) $(FLOYD_FILES:%=floyd/%)
 	sh util/make_version
 
-_CoqProject _CoqProject-export .loadpath .loadpath-export: Makefile util/coqflags 
+_CoqProject _CoqProject-export .loadpath .loadpath-export: Makefile util/coqflags
 	echo $(COQFLAGS) > .loadpath
 	util/coqflags > .loadpath-export
 	cp .loadpath-export _CoqProject-export
